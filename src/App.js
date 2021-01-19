@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import React from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { class: "" };
+  }
+
+  getClass = async () => {
+    const url = process.env.REACT_APP_BACKEND_URL;
+
+    try {
+      const request = await axios({
+        method: "get",
+        url,
+      });
+      console.log(request.data);
+      this.setState((state) => {
+        return { class: request.data };
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <button
+          onClick={async () => {
+            await this.getClass();
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          Piger une classe
+        </button>
+        <div>{this.state.class}</div>
+      </div>
+    );
+  }
 }
 
 export default App;
